@@ -33,7 +33,12 @@ const initialModalErrorEl = document.getElementById('initialModalError');
 
 const initialModal = document.getElementById('initialModal');
 const ageModal = document.getElementById('ageModal');
+const imcModal = document.getElementById('imcModal');
 const closeModalBtn = document.getElementById('closeModalBtn');
+const continueFromImcBtn = document.getElementById('continueFromImcBtn');
+const confirmImcReadingEl = document.getElementById('confirmImcReading');
+const imcModalContentEl = document.getElementById('imcModalContent');
+const imcModalErrorEl = document.getElementById('imcModalError');
 const loaderOverlay = document.getElementById('loaderOverlay');
 const loadingBarFill = document.getElementById('loadingBarFill');
 
@@ -83,6 +88,58 @@ function getImcClassification(imc) {
   if (imc < 25) return 'Peso normal';
   if (imc < 30) return 'Sobrepeso';
   return 'Obesidad';
+}
+
+function getImcInfo(imc) {
+  const intro = `<p><strong>El Índice de Masa Corporal (IMC)</strong> es una medida simple que relaciona el peso y la talla, calculada como el peso en kilogramos dividido por el cuadrado de la estatura en metros (kg/m²), que la Organización Mundial de la Salud (OMS) usa para clasificar a los adultos en categorías de peso, siendo un IMC mayor a 25 sobrepeso, mayor a 30 obesidad moderada y cuando resulta superior a 35 obesidad severa. Los anteriores parámetros ayudan a evaluar la posibilidad de realizar la cirugía estética y evaluar riesgos de salud como enfermedades crónicas y la posibilidad de riesgos graves durante la cirugía.</p>`;
+
+  if (imc < 18.5) {
+    return {
+      suitable: false,
+      content: intro + `
+        <div class="imc-value">Tu IMC: ${imc}</div>
+        <p class="imc-status not-suitable">EN ESTE MOMENTO NO ES APTA PARA LA INTERVENCIÓN QUIRÚRGICA SOLICITADA</p>
+        <p>Su Índice de Masa Corporal (IMC) es <strong>BAJO</strong>, o muestra peso insuficiente ya que de acuerdo a la Organización Mundial de la Salud (OMS) en adultos se define como cualquier valor inferior a 18.5 kg/m². Este rango indica que la persona está por debajo de un peso saludable, lo que podría implicar riesgos de desnutrición o deficiencia de nutrientes.</p>
+        <p><strong>SIGUE LAS INSTRUCCIONES DE TU MÉDICO.</strong> Si deseas continuar con la cirugía solicitada, realízate los exámenes clínicos y pídele a tu médico las indicaciones específicas para regular tu índice de masa corporal y poder solicitar una nueva valoración para tu cirugía, sin descartar siempre la existencia de riesgos quirúrgicos que deberá leer y a su vez seguir el protocolo médico, firmar el consentimiento informado entre otros documentos que forman parte de su expediente clínico.</p>
+        <p><strong>Recuerda:</strong> Si no cumples las indicaciones pre-quirúrgicas se podrá cancelar tu cirugía ya que nos preocupamos por tu salud y bienestar.</p>
+      `
+    };
+  } else if (imc >= 18.5 && imc < 25) {
+    return {
+      suitable: true,
+      content: intro + `
+        <div class="imc-value">Tu IMC: ${imc}</div>
+        <p class="imc-status suitable">HOY USTED ES APTA PARA LA INTERVENCIÓN QUIRÚRGICA SOLICITADA</p>
+        <p>Su Índice de Masa Corporal (IMC) se encuentra en estado <strong>ÓPTIMO</strong>. Su peso muestra condiciones favorables para la intervención quirúrgica que usted desea realizarse ya que de acuerdo a la Organización Mundial de la Salud (OMS) en adultos se define como cualquier valor entre 18.5–24.9 como un peso normal. Este rango indica que la persona está en un rango de peso saludable.</p>
+        <p><strong>SIGUE LAS INSTRUCCIONES DE TU MÉDICO.</strong> Si deseas continuar con la cirugía solicitada, realízate los exámenes clínicos y pídele a tu médico las indicaciones específicas para regular tu índice de masa corporal antes de tu cirugía, sin descartar siempre la existencia de riesgos quirúrgicos que deberá leer y a su vez seguir el protocolo médico, firmar el consentimiento informado entre otros documentos que forman parte de su expediente clínico.</p>
+        <p><strong>Recuerda:</strong> Si no cumples las indicaciones pre-quirúrgicas o aumentas de peso se podrá cancelar tu cirugía ya que nos preocupamos por tu salud y bienestar.</p>
+      `
+    };
+  } else if (imc >= 25 && imc < 35) {
+    return {
+      suitable: true,
+      content: intro + `
+        <div class="imc-value">Tu IMC: ${imc}</div>
+        <p class="imc-status suitable">HOY USTED ES APTA PARA LA INTERVENCIÓN QUIRÚRGICA SOLICITADA</p>
+        <p>Su Índice de Masa Corporal (IMC) se encuentra en estado de <strong>OBESIDAD MODERADA CLASE I</strong>. Sin embargo, muestra condiciones que SÍ permiten realizar la intervención quirúrgica que usted desea realizarse ya que de acuerdo a la Organización Mundial de la Salud (OMS) en adultos se define la obesidad moderada clase I como cualquier valor IMC mayor a 30. Este rango indica que la persona aunque revela obesidad se encuentra saludable, sin embargo, se deberán tomar las acciones necesarias para disminuir los riesgos en tu intervención quirúrgica.</p>
+        <p><strong>SIGUE LAS INSTRUCCIONES DE TU MÉDICO.</strong> Si deseas continuar con la cirugía solicitada, realízate los exámenes clínicos y pídele a tu médico las indicaciones específicas para regular tu índice de masa corporal antes de tu cirugía, sin descartar siempre la existencia de riesgos quirúrgicos que deberá leer y a su vez seguir el protocolo médico, firmar el consentimiento informado entre otros documentos que forman parte de su expediente clínico.</p>
+        <p><strong>Recuerda:</strong> Si no cumples las indicaciones pre-quirúrgicas o aumentas de peso se podrá cancelar tu cirugía ya que nos preocupamos por tu salud y bienestar.</p>
+      `
+    };
+  } else {
+    return {
+      suitable: false,
+      content: intro + `
+        <div class="imc-value">Tu IMC: ${imc}</div>
+        <p class="imc-status not-suitable">HOY USTED NO ES APTA PARA LA INTERVENCIÓN QUIRÚRGICA SOLICITADA</p>
+        <p>Su Índice de Masa Corporal (IMC) se encuentra en estado de <strong>OBESIDAD SEVERA</strong>. La OMS clasifica la obesidad severa (o grado II) en adultos con un Índice de Masa Corporal (IMC) de 35.0 a 39.9 kg/m². Su peso muestra condiciones que NO permiten realizar la intervención quirúrgica que usted desea realizarse ya que de acuerdo a la Organización Mundial de la Salud (OMS) en adultos se define la obesidad severa como cualquier valor IMC mayor a 35.</p>
+        <p>Este rango indica que la persona se encuentra en una categoría en la que presenta <strong>riesgos altos a la salud</strong>, predisposición a enfermedades crónicas y enfermedades cardiovasculares, por lo que la operación que usted desea pone en riesgo su vida.</p>
+        <p><strong>Recuerda:</strong> Si tu resultado de Índice de Masa Corporal es mayor a 35, refleja obesidad severa y de acuerdo a las políticas de prestación del servicio y a los parámetros de la Organización Mundial de la Salud aún no estás en condiciones óptimas para la operación que deseas ya que se pondría en riesgo grave tu salud y nos preocupamos por tu bienestar.</p>
+        <p><strong>SIGUE LAS INSTRUCCIONES DE TU MÉDICO.</strong> Si deseas continuar con la cirugía solicitada, realízate los exámenes clínicos y pídele a tu médico las indicaciones específicas para regular tu índice de masa corporal y poder solicitar una nueva valoración para tu cirugía, sin descartar siempre la existencia de riesgos quirúrgicos que deberá leer y a su vez seguir el protocolo médico, firmar el consentimiento informado entre otros documentos que forman parte de su expediente clínico.</p>
+        <p><strong>Recuerda:</strong> Si no cumples las indicaciones pre-quirúrgicas o aumentas de peso se podrá cancelar tu cirugía ya que nos preocupamos por tu salud y bienestar.</p>
+      `
+    };
+  }
 }
 
 function validateInitialQuestionnaire() {
@@ -182,10 +239,19 @@ toSummaryBtn.addEventListener('click', () => {
   summaryErrorEl.textContent = '';
   statusMessageEl.textContent = '';
   statusMessageEl.className = 'status-message';
+  imcModalErrorEl.textContent = '';
+  confirmImcReadingEl.checked = false;
 
   try {
-    fillSummary();
-    setStep(3);
+    const { heightCm, weightKg } = validateStep2();
+    const heightM = heightCm / 100;
+    const imc = weightKg / (heightM * heightM);
+    const roundedImc = Number(imc.toFixed(2));
+
+    const imcInfo = getImcInfo(roundedImc);
+    imcModalContentEl.innerHTML = imcInfo.content;
+
+    showModal(imcModal);
   } catch (error) {
     step2ErrorEl.textContent = error.message;
   }
@@ -197,6 +263,22 @@ backToStep2Btn.addEventListener('click', () => setStep(2));
 closeModalBtn.addEventListener('click', () => hideModal(ageModal));
 ageModal.addEventListener('click', (event) => {
   if (event.target === ageModal) hideModal(ageModal);
+});
+
+continueFromImcBtn.addEventListener('click', () => {
+  imcModalErrorEl.textContent = '';
+
+  try {
+    if (!confirmImcReadingEl.checked) {
+      throw new Error('Debes confirmar que has leído y comprendido la información sobre tu IMC.');
+    }
+
+    fillSummary();
+    hideModal(imcModal);
+    setStep(3);
+  } catch (error) {
+    imcModalErrorEl.textContent = error.message;
+  }
 });
 
 form.addEventListener('submit', async (event) => {
@@ -213,6 +295,8 @@ form.addEventListener('submit', async (event) => {
 
     const { fullName, age, heightCm, weightKg, procedure, roundedImc, classification } = fillSummary();
 
+    const imcInfo = getImcInfo(roundedImc);
+
     const payload = {
       nombre: fullName,
       edad: age,
@@ -221,6 +305,8 @@ form.addEventListener('submit', async (event) => {
       procedimiento: procedure,
       imc: roundedImc,
       clasificacion_imc: classification,
+      apta_para_cirugia: imcInfo.suitable,
+      confirmo_lectura_imc: confirmImcReadingEl.checked,
       confirmo_datos: confirmDataEl.checked,
       token: parseUrlToken(),
       timestamp: new Date().toISOString()

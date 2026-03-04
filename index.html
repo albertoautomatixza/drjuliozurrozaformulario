@@ -147,6 +147,19 @@
     </div>
   </div>
 
+  <div id="imcModal" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="imcModalTitle">
+    <div class="modal__content modal__content--large">
+      <h3 id="imcModalTitle">Información de tu Índice de Masa Corporal</h3>
+      <div id="imcModalContent" class="imc-content"></div>
+      <label class="checkbox-row" for="confirmImcReading">
+        <input type="checkbox" id="confirmImcReading" name="confirmImcReading" required />
+        <span>He leído y comprendido la información sobre mi IMC y las condiciones para la intervención quirúrgica.</span>
+      </label>
+      <p id="imcModalError" class="inline-error" aria-live="polite"></p>
+      <button type="button" id="continueFromImcBtn" class="btn btn--primary">Continuar</button>
+    </div>
+  </div>
+
   <script type="module" src="main.js"></script>
 </body>
 </html>
