@@ -205,6 +205,12 @@ function fillSummary() {
 }
 
 async function sendPayload(payload) {
+  if (CONFIG.webhookUrl.includes('TU_WEBHOOK_AQUI')) {
+    console.log('Modo de prueba - Datos del formulario:', payload);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    return;
+  }
+
   const response = await fetch(CONFIG.webhookUrl, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
