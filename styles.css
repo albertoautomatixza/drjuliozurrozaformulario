@@ -585,3 +585,11 @@ select {
     width: 100%;
   }
 }
+
+.modal--final {
+  pointer-events: auto;
+}
+
+.modal--final .modal__content {
+  pointer-events: auto;
+}

@@ -36,7 +36,6 @@ const imcModal = document.getElementById('imcModal');
 const successModal = document.getElementById('successModal');
 const closeModalBtn = document.getElementById('closeModalBtn');
 const continueFromImcBtn = document.getElementById('continueFromImcBtn');
-const closeSuccessBtn = document.getElementById('closeSuccessBtn');
 const confirmImcReadingEl = document.getElementById('confirmImcReading');
 const imcModalContentEl = document.getElementById('imcModalContent');
 const imcModalErrorEl = document.getElementById('imcModalError');
@@ -266,8 +265,6 @@ ageModal.addEventListener('click', (event) => {
   if (event.target === ageModal) hideModal(ageModal);
 });
 
-closeSuccessBtn.addEventListener('click', () => hideModal(successModal));
-
 continueFromImcBtn.addEventListener('click', () => {
   imcModalErrorEl.textContent = '';
 
@@ -314,6 +311,11 @@ form.addEventListener('submit', async (event) => {
     submitBtn.disabled = true;
     await sendPayload(payload);
     hideLoader();
+
+    backToStep1Btn.disabled = true;
+    backToStep2Btn.disabled = true;
+    toSummaryBtn.disabled = true;
+
     showModal(successModal);
   } catch (error) {
     summaryErrorEl.textContent = error.message;
