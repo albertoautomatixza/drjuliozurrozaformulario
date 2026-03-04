@@ -42,6 +42,16 @@ const imcModalErrorEl = document.getElementById('imcModalError');
 const loaderOverlay = document.getElementById('loaderOverlay');
 const loadingBarFill = document.getElementById('loadingBarFill');
 
+const icon1_1 = document.getElementById('icon1-1');
+const icon1_2 = document.getElementById('icon1-2');
+const icon1_3 = document.getElementById('icon1-3');
+const icon2_1 = document.getElementById('icon2-1');
+const icon2_2 = document.getElementById('icon2-2');
+const icon2_3 = document.getElementById('icon2-3');
+const icon3_1 = document.getElementById('icon3-1');
+const icon3_2 = document.getElementById('icon3-2');
+const icon3_3 = document.getElementById('icon3-3');
+
 function setStep(stepNumber) {
   steps.forEach((step) => {
     step.classList.toggle('is-active', Number(step.dataset.step) === stepNumber);
@@ -81,6 +91,53 @@ function hideLoader() {
 function parseUrlToken() {
   const params = new URLSearchParams(window.location.search);
   return params.get('token') || '';
+}
+
+function updateStep1Icons() {
+  const fullName = fullNameEl.value.trim();
+  const age = Number(ageEl.value);
+
+  if (fullName.length >= 3) {
+    icon1_1.classList.add('is-filled');
+  } else {
+    icon1_1.classList.remove('is-filled');
+  }
+
+  if (!Number.isNaN(age) && age >= CONFIG.minAge) {
+    icon1_2.classList.add('is-filled');
+  } else {
+    icon1_2.classList.remove('is-filled');
+  }
+
+  if (fullName.length >= 3 && !Number.isNaN(age) && age >= CONFIG.minAge) {
+    icon1_3.classList.add('is-filled');
+  } else {
+    icon1_3.classList.remove('is-filled');
+  }
+}
+
+function updateStep2Icons() {
+  const weightKg = Number(weightEl.value);
+  const heightCm = Number(heightEl.value);
+  const procedure = procedureEl.value.trim();
+
+  if (weightKg >= CONFIG.weightRange.min && weightKg <= CONFIG.weightRange.max) {
+    icon2_1.classList.add('is-filled');
+  } else {
+    icon2_1.classList.remove('is-filled');
+  }
+
+  if (heightCm >= CONFIG.heightRange.min && heightCm <= CONFIG.heightRange.max) {
+    icon2_2.classList.add('is-filled');
+  } else {
+    icon2_2.classList.remove('is-filled');
+  }
+
+  if (procedure) {
+    icon2_3.classList.add('is-filled');
+  } else {
+    icon2_3.classList.remove('is-filled');
+  }
 }
 
 function getImcClassification(imc) {
@@ -224,6 +281,13 @@ async function sendPayload(payload) {
 
 openInitialModalBtn.addEventListener('click', () => showModal(initialModal));
 
+fullNameEl.addEventListener('input', updateStep1Icons);
+ageEl.addEventListener('input', updateStep1Icons);
+
+weightEl.addEventListener('input', updateStep2Icons);
+heightEl.addEventListener('input', updateStep2Icons);
+procedureEl.addEventListener('change', updateStep2Icons);
+
 continueFromInitialBtn.addEventListener('click', () => {
   initialModalErrorEl.textContent = '';
 
@@ -232,6 +296,7 @@ continueFromInitialBtn.addEventListener('click', () => {
     hideModal(initialModal);
     initialInfoEl.textContent = `✅ ${fullName}, ${age} años. Puedes continuar al siguiente paso.`;
     initialInfoEl.className = 'status-message success';
+    updateStep1Icons();
     setStep(2);
   } catch (error) {
     if (error.message !== 'Edad no permitida para este formulario.') {
@@ -257,6 +322,7 @@ toSummaryBtn.addEventListener('click', () => {
     const imcInfo = getImcInfo(roundedImc);
     imcModalContentEl.innerHTML = imcInfo.content;
 
+    updateStep2Icons();
     showModal(imcModal);
   } catch (error) {
     step2ErrorEl.textContent = error.message;
@@ -286,6 +352,9 @@ continueFromImcBtn.addEventListener('click', () => {
 
     fillSummary();
     hideModal(imcModal);
+    icon3_1.classList.add('is-filled');
+    icon3_2.classList.add('is-filled');
+    icon3_3.classList.add('is-filled');
     setStep(3);
   } catch (error) {
     imcModalErrorEl.textContent = error.message;
@@ -342,3 +411,5 @@ form.addEventListener('submit', async (event) => {
 });
 
 setStep(1);
+updateStep1Icons();
+updateStep2Icons();

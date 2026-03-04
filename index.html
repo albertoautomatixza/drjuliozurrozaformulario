@@ -29,7 +29,6 @@
     <section class="panel" aria-labelledby="form-title">
       <aside class="panel__intro">
         <h1 id="form-title">Registro de Paciente</h1>
-        <p>Complete este registro para su evaluación inicial.</p>
       </aside>
 
       <section class="panel__form">
@@ -45,7 +44,7 @@
         <form id="patientForm" novalidate>
           <section class="step is-active" data-step="1" aria-label="Cuestionario inicial">
             <h2>Cuestionario inicial</h2>
-            <div class="step-icons" aria-hidden="true"><span>👤</span><span>🎂</span><span>✅</span></div>
+            <div class="step-icons" aria-hidden="true"><span class="step-icon" id="icon1-1">👤</span><span class="step-icon" id="icon1-2">🎂</span><span class="step-icon" id="icon1-3">✅</span></div>
             <p>Primero llena nombre completo y edad en el popup inicial.</p>
             <p id="initialInfo" class="status-message"></p>
             <button type="button" id="openInitialModalBtn" class="btn btn--primary">Abrir cuestionario</button>
@@ -53,7 +52,7 @@
 
           <section class="step" data-step="2" aria-label="Datos corporales y procedimiento">
             <h2>Datos para valoración</h2>
-            <div class="step-icons" aria-hidden="true"><span>⚖️</span><span>📏</span><span>🩺</span></div>
+            <div class="step-icons" aria-hidden="true"><span class="step-icon" id="icon2-1">⚖️</span><span class="step-icon" id="icon2-2">📏</span><span class="step-icon" id="icon2-3">🩺</span></div>
 
             <div class="field-grid">
               <div class="field">
@@ -94,7 +93,7 @@
 
           <section class="step" data-step="3" aria-live="polite" aria-label="Resumen y confirmación">
             <h2>Resumen de información</h2>
-            <div class="step-icons" aria-hidden="true"><span>🧾</span><span>💗</span><span>📤</span></div>
+            <div class="step-icons" aria-hidden="true"><span class="step-icon" id="icon3-1">🧾</span><span class="step-icon" id="icon3-2">💗</span><span class="step-icon" id="icon3-3">📤</span></div>
             <ul id="summaryList" class="summary-list"></ul>
             <p id="imcResult" class="result"></p>
 

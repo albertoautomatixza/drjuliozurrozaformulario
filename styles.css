@@ -222,6 +222,7 @@ h2 {
   display: flex;
   gap: 0.625rem;
   margin-bottom: 1rem;
+  justify-content: center;
 }
 
 .step-icons span {
@@ -233,6 +234,13 @@ h2 {
   background: var(--color-panel-alt);
   border: 2px solid var(--color-border);
   font-size: 1.125rem;
+  transition: all 0.3s ease;
+}
+
+.step-icons span.is-filled {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  transform: scale(1.1);
 }
 
 details {
