@@ -14,7 +14,6 @@ const continueFromInitialBtn = document.getElementById('continueFromInitialBtn')
 const toSummaryBtn = document.getElementById('toSummaryBtn');
 const backToStep1Btn = document.getElementById('backToStep1Btn');
 const backToStep2Btn = document.getElementById('backToStep2Btn');
-const resetBtn = document.getElementById('resetBtn');
 const submitBtn = document.getElementById('submitBtn');
 
 const fullNameEl = document.getElementById('fullName');
@@ -198,21 +197,6 @@ backToStep2Btn.addEventListener('click', () => setStep(2));
 closeModalBtn.addEventListener('click', () => hideModal(ageModal));
 ageModal.addEventListener('click', (event) => {
   if (event.target === ageModal) hideModal(ageModal);
-});
-
-resetBtn.addEventListener('click', () => {
-  form.reset();
-  summaryListEl.innerHTML = '';
-  imcResultEl.textContent = '';
-  initialInfoEl.textContent = '';
-  initialInfoEl.className = 'status-message';
-  step2ErrorEl.textContent = '';
-  summaryErrorEl.textContent = '';
-  initialModalErrorEl.textContent = '';
-  statusMessageEl.textContent = '';
-  statusMessageEl.className = 'status-message';
-  setStep(1);
-  showModal(initialModal);
 });
 
 form.addEventListener('submit', async (event) => {
