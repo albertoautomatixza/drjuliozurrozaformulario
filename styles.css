@@ -269,6 +269,17 @@ summary {
   gap: 0.65rem;
 }
 
+.checkbox-row input[type="checkbox"] {
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+}
+
+.checkbox-row span {
+  flex: 1;
+  min-width: 0;
+  word-wrap: break-word;
+}
+
 .inline-error {
   min-height: 1rem;
   margin: 0 0 0.8rem;
@@ -461,6 +472,7 @@ select {
   width: min(92vw, 600px);
   max-height: 85vh;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .modal__content h3 {
@@ -631,6 +643,21 @@ select {
   .btn--ghost,
   .btn--primary {
     width: 100%;
+  }
+
+  .modal__content,
+  .modal__content--large {
+    padding: 1.5rem 1rem;
+    width: min(95vw, 600px);
+  }
+
+  .checkbox-row {
+    gap: 0.5rem;
+  }
+
+  .checkbox-row span {
+    font-size: 0.875rem;
+    line-height: 1.5;
   }
 }
 
