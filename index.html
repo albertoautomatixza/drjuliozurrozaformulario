@@ -1,1 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Formulario de registro de pacientes" />
+  <title>Registro de Paciente | Dr. Julio César Zurroza</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar" aria-label="Barra superior de marca">
+    <div class="topbar__logo-slot" aria-label="Espacio reservado para logo externo">
+      <span>Espacio para logo (URL de Drive)</span>
+    </div>
+    <a class="topbar__site-link" href="https://drjuliozurroza.com/" target="_blank" rel="noopener noreferrer">
+      drjuliozurroza.com
+    </a>
+  </header>
 
+  <main class="page">
+    <section class="panel" aria-labelledby="form-title">
+      <aside class="panel__intro">
+        <p class="brand">Dr. Julio César Zurroza</p>
+        <h1 id="form-title">Registro de Paciente</h1>
+        <p>Complete este registro para su evaluación inicial.</p>
+      </aside>
+
+      <section class="panel__form">
+        <p class="form-kicker">llena todos los pasos para seguir con tu consulta</p>
+        <div class="progress" aria-label="Progreso del formulario">
+          <span class="progress__step is-active" data-step="1">1</span>
+          <span class="progress__line"></span>
+          <span class="progress__step" data-step="2">2</span>
+          <span class="progress__line"></span>
+          <span class="progress__step" data-step="3">3</span>
+        </div>
+
+        <form id="patientForm" novalidate>
+          <section class="step is-active" data-step="1" aria-label="Cuestionario inicial">
+            <h2>Cuestionario inicial</h2>
+            <div class="step-icons" aria-hidden="true"><span>👤</span><span>🎂</span><span>✅</span></div>
+            <p>Primero llena nombre completo y edad en el popup inicial.</p>
+            <p id="initialInfo" class="status-message"></p>
+            <button type="button" id="openInitialModalBtn" class="btn btn--primary">Abrir cuestionario</button>
+          </section>
+
+          <section class="step" data-step="2" aria-label="Datos corporales y procedimiento">
+            <h2>Datos para valoración</h2>
+            <div class="step-icons" aria-hidden="true"><span>⚖️</span><span>📏</span><span>🩺</span></div>
+
+            <div class="field-grid">
+              <div class="field">
+                <label for="weightKg">Peso (kg)</label>
+                <input type="number" id="weightKg" name="weightKg" required min="30" max="250" step="0.1" placeholder="Ej. 70" />
+              </div>
+
+              <div class="field">
+                <label for="heightCm">Estatura (cm)</label>
+                <input type="number" id="heightCm" name="heightCm" required min="120" max="220" placeholder="Ej. 168" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="procedure">Procedimiento estético quirúrgico que desea</label>
+              <select id="procedure" name="procedure" required>
+                <option value="">Selecciona un servicio médico</option>
+                <option>Aumento mamario</option>
+                <option>Levantamiento de senos</option>
+                <option>Liposucción de alta definición</option>
+                <option>Abdominoplastia</option>
+                <option>Mommy makeover</option>
+                <option>Rinoplastia</option>
+                <option>Blefaroplastia</option>
+                <option>Liposucción de cuello</option>
+                <option>Rejuvenecimiento de cuello</option>
+                <option>Bichectomía</option>
+              </select>
+            </div>
+
+            <p id="step2Error" class="inline-error" aria-live="polite"></p>
+
+            <div class="actions">
+              <button type="button" id="backToStep1Btn" class="btn btn--ghost">Volver</button>
+              <button type="button" id="toSummaryBtn" class="btn btn--primary">Continuar al resumen</button>
+            </div>
+          </section>
+
+          <section class="step" data-step="3" aria-live="polite" aria-label="Resumen y confirmación">
+            <h2>Resumen de información</h2>
+            <div class="step-icons" aria-hidden="true"><span>🧾</span><span>💗</span><span>📤</span></div>
+            <ul id="summaryList" class="summary-list"></ul>
+            <p id="imcResult" class="result"></p>
+
+            <label class="checkbox-row" for="confirmData">
+              <input type="checkbox" id="confirmData" name="confirmData" required />
+              <span>Confirmo que toda la información es correcta y autorizo su uso para valoración inicial.</span>
+            </label>
+            <p id="summaryError" class="inline-error" aria-live="polite"></p>
+            <p id="statusMessage" class="status-message"></p>
+
+            <div class="actions">
+              <button type="button" id="backToStep2Btn" class="btn btn--ghost">Volver</button>
+              <button type="submit" id="submitBtn" class="btn btn--primary">Enviar registro</button>
+            </div>
+            <button type="button" id="resetBtn" class="btn btn--primary">Registrar otro paciente</button>
+          </section>
+        </form>
+      </section>
+    </section>
+  </main>
+
+  <div id="loaderOverlay" class="loader-overlay" aria-hidden="true">
+    <div class="loader-card">
+      <span class="spinner" aria-hidden="true"></span>
+      <p>Enviando información...</p>
+    </div>
+  </div>
+
+  <div id="initialModal" class="modal is-visible" aria-hidden="false" role="dialog" aria-modal="true" aria-labelledby="initialModalTitle">
+    <div class="modal__content">
+      <h3 id="initialModalTitle">Paso 1 · Cuestionario</h3>
+      <div class="field">
+        <label for="fullName">Nombre completo</label>
+        <input type="text" id="fullName" name="fullName" minlength="3" placeholder="Ej. Ana López Martínez" />
+      </div>
+      <div class="field">
+        <label for="age">Edad</label>
+        <input type="number" id="age" name="age" min="0" max="120" placeholder="Ej. 29" />
+      </div>
+      <p id="initialModalError" class="inline-error" aria-live="polite"></p>
+      <button type="button" id="continueFromInitialBtn" class="btn btn--primary">Continuar</button>
+    </div>
+  </div>
+
+  <div id="ageModal" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="ageModalTitle">
+    <div class="modal__content">
+      <h3 id="ageModalTitle">⚠️ Advertencia</h3>
+      <p>Este procedimiento es para mayores de edad.</p>
+      <button type="button" id="closeModalBtn" class="btn btn--primary">Entendido</button>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
