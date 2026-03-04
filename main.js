@@ -1,5 +1,5 @@
 const CONFIG = {
-  webhookUrl: 'https://hook.make.com/TU_WEBHOOK_AQUI',
+  webhookUrl: 'https://hook.eu2.make.com/snkxjnttf3bbr0bw476f41bk7w7dxvlr',
   minAge: 18,
   heightRange: { min: 120, max: 220 },
   weightRange: { min: 30, max: 250 }
