@@ -21,7 +21,6 @@ const ageEl = document.getElementById('age');
 const weightEl = document.getElementById('weightKg');
 const heightEl = document.getElementById('heightCm');
 const procedureEl = document.getElementById('procedure');
-const confirmDataEl = document.getElementById('confirmData');
 
 const initialInfoEl = document.getElementById('initialInfo');
 const summaryListEl = document.getElementById('summaryList');
@@ -293,10 +292,6 @@ form.addEventListener('submit', async (event) => {
   statusMessageEl.className = 'status-message';
 
   try {
-    if (!confirmDataEl.checked) {
-      throw new Error('Debes confirmar que la información es correcta para enviar.');
-    }
-
     const { fullName, age, heightCm, weightKg, procedure, roundedImc, classification } = fillSummary();
 
     const imcInfo = getImcInfo(roundedImc);
@@ -311,7 +306,6 @@ form.addEventListener('submit', async (event) => {
       clasificacion_imc: classification,
       apta_para_cirugia: imcInfo.suitable,
       confirmo_lectura_imc: confirmImcReadingEl.checked,
-      confirmo_datos: confirmDataEl.checked,
       token: parseUrlToken(),
       timestamp: new Date().toISOString()
     };
