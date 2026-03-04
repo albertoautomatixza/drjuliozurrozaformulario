@@ -400,6 +400,13 @@ select {
   color: var(--color-text);
 }
 
+#imcResult {
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
+  pointer-events: none;
+}
+
 .status-message {
   min-height: 1.6rem;
   font-weight: 600;
