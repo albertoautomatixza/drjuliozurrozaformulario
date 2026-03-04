@@ -36,6 +36,7 @@ const initialModal = document.getElementById('initialModal');
 const ageModal = document.getElementById('ageModal');
 const closeModalBtn = document.getElementById('closeModalBtn');
 const loaderOverlay = document.getElementById('loaderOverlay');
+const loadingBarFill = document.getElementById('loadingBarFill');
 
 function setStep(stepNumber) {
   steps.forEach((step) => {
@@ -47,6 +48,10 @@ function setStep(stepNumber) {
     dot.classList.toggle('is-active', dotStep === stepNumber);
     dot.classList.toggle('is-done', dotStep < stepNumber);
   });
+
+  const totalSteps = 3;
+  const progressPercentage = (stepNumber / totalSteps) * 100;
+  loadingBarFill.style.width = `${progressPercentage}%`;
 }
 
 function showModal(modalEl) {
@@ -250,3 +255,5 @@ form.addEventListener('submit', async (event) => {
     submitBtn.disabled = false;
   }
 });
+
+setStep(1);
