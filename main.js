@@ -34,8 +34,10 @@ const initialModalErrorEl = document.getElementById('initialModalError');
 const initialModal = document.getElementById('initialModal');
 const ageModal = document.getElementById('ageModal');
 const imcModal = document.getElementById('imcModal');
+const successModal = document.getElementById('successModal');
 const closeModalBtn = document.getElementById('closeModalBtn');
 const continueFromImcBtn = document.getElementById('continueFromImcBtn');
+const closeSuccessBtn = document.getElementById('closeSuccessBtn');
 const confirmImcReadingEl = document.getElementById('confirmImcReading');
 const imcModalContentEl = document.getElementById('imcModalContent');
 const imcModalErrorEl = document.getElementById('imcModalError');
@@ -265,6 +267,8 @@ ageModal.addEventListener('click', (event) => {
   if (event.target === ageModal) hideModal(ageModal);
 });
 
+closeSuccessBtn.addEventListener('click', () => hideModal(successModal));
+
 continueFromImcBtn.addEventListener('click', () => {
   imcModalErrorEl.textContent = '';
 
@@ -315,12 +319,11 @@ form.addEventListener('submit', async (event) => {
     showLoader();
     submitBtn.disabled = true;
     await sendPayload(payload);
-    statusMessageEl.textContent = '✅ Registro enviado correctamente. Nos pondremos en contacto pronto.';
-    statusMessageEl.className = 'status-message success';
+    hideLoader();
+    showModal(successModal);
   } catch (error) {
     summaryErrorEl.textContent = error.message;
     statusMessageEl.className = 'status-message error';
-  } finally {
     hideLoader();
     submitBtn.disabled = false;
   }
