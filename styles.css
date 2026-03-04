@@ -587,9 +587,12 @@ select {
 }
 
 .modal--final {
-  pointer-events: auto;
+  pointer-events: auto !important;
+  z-index: 9999 !important;
+  background: rgba(26, 31, 54, 0.95) !important;
 }
 
 .modal--final .modal__content {
-  pointer-events: auto;
+  pointer-events: none !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
 }

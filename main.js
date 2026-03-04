@@ -265,6 +265,11 @@ ageModal.addEventListener('click', (event) => {
   if (event.target === ageModal) hideModal(ageModal);
 });
 
+successModal.addEventListener('click', (event) => {
+  event.stopPropagation();
+  event.preventDefault();
+});
+
 continueFromImcBtn.addEventListener('click', () => {
   imcModalErrorEl.textContent = '';
 
@@ -312,11 +317,16 @@ form.addEventListener('submit', async (event) => {
     await sendPayload(payload);
     hideLoader();
 
+    form.style.pointerEvents = 'none';
+    form.style.opacity = '0.6';
+
     backToStep1Btn.disabled = true;
     backToStep2Btn.disabled = true;
     toSummaryBtn.disabled = true;
+    submitBtn.disabled = true;
 
     showModal(successModal);
+    successModal.style.pointerEvents = 'auto';
   } catch (error) {
     summaryErrorEl.textContent = error.message;
     statusMessageEl.className = 'status-message error';
