@@ -59,8 +59,8 @@ let calYear = new Date().getFullYear() - 25;
 let calMonth = 0;
 let selectedDob = null;
 
-let ineFrenteBase64 = null;
-let ineReversoBase64 = null;
+let ineFrenteFile = null;
+let ineReversoFile = null;
 const ineFrenteInput = document.getElementById('ineFrenteInput');
 const ineReversoInput = document.getElementById('ineReversoInput');
 const ineFrenteBtn = document.getElementById('ineFrenteBtn');
@@ -363,8 +363,8 @@ function fillSummary() {
   summaryListEl.innerHTML = `
     <li><strong>Nombre completo:</strong> ${fullName}</li>
     <li><strong>Edad:</strong> ${age} años</li>
-    <li><strong>INE Frente:</strong> ${ineFrenteBase64 ? 'Adjunta' : 'No adjunta'}</li>
-    <li><strong>INE Reverso:</strong> ${ineReversoBase64 ? 'Adjunta' : 'No adjunta'}</li>
+    <li><strong>INE Frente:</strong> ${ineFrenteFile ? 'Adjunta' : 'No adjunta'}</li>
+    <li><strong>INE Reverso:</strong> ${ineReversoFile ? 'Adjunta' : 'No adjunta'}</li>
     <li><strong>Peso:</strong> ${weightKg} kg</li>
     <li><strong>Estatura:</strong> ${heightCm} cm</li>
     <li><strong>Procedimiento deseado:</strong> ${procedure}</li>
@@ -375,17 +375,20 @@ function fillSummary() {
   return { fullName, age, heightCm, weightKg, procedure, roundedImc, classification };
 }
 
-async function sendPayload(payload) {
+async function sendPayload(formData) {
   if (CONFIG.webhookUrl.includes('TU_WEBHOOK_AQUI')) {
-    console.log('Modo de prueba - Datos del formulario:', payload);
+    const entries = {};
+    for (const [key, value] of formData.entries()) {
+      entries[key] = value instanceof Blob ? `[Archivo: ${(value.size / 1024).toFixed(1)} KB]` : value;
+    }
+    console.log('Modo de prueba - Datos del formulario:', entries);
     await new Promise(resolve => setTimeout(resolve, 1000));
     return;
   }
 
   const response = await fetch(CONFIG.webhookUrl, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
+    body: formData
   });
 
   if (!response.ok) {
@@ -427,7 +430,7 @@ dobContinueBtn.addEventListener('click', () => {
 });
 
 function updateIneCheckIcon() {
-  if (ineFrenteBase64 && ineReversoBase64) {
+  if (ineFrenteFile && ineReversoFile) {
     iconIne3.classList.add('is-filled');
   } else {
     iconIne3.classList.remove('is-filled');
@@ -449,8 +452,8 @@ ineFrenteInput.addEventListener('change', async () => {
   if (!file) return;
   ineErrorEl.textContent = '';
   try {
-    ineFrenteBase64 = await compressImage(file);
-    ineFrenteImg.src = ineFrenteBase64;
+    ineFrenteFile = await compressImage(file);
+    ineFrenteImg.src = URL.createObjectURL(ineFrenteFile);
     ineFrenteImg.style.display = 'block';
     ineFrentePlaceholder.style.display = 'none';
     ineFrenteBtn.textContent = 'Volver a tomar';
@@ -466,8 +469,8 @@ ineReversoInput.addEventListener('change', async () => {
   if (!file) return;
   ineErrorEl.textContent = '';
   try {
-    ineReversoBase64 = await compressImage(file);
-    ineReversoImg.src = ineReversoBase64;
+    ineReversoFile = await compressImage(file);
+    ineReversoImg.src = URL.createObjectURL(ineReversoFile);
     ineReversoImg.style.display = 'block';
     ineReversoPlaceholder.style.display = 'none';
     ineReversoBtn.textContent = 'Volver a tomar';
@@ -482,11 +485,11 @@ backFromIneBtn.addEventListener('click', () => setStep(1));
 
 continueFromIneBtn.addEventListener('click', () => {
   ineErrorEl.textContent = '';
-  if (!ineFrenteBase64) {
+  if (!ineFrenteFile) {
     ineErrorEl.textContent = 'Debes capturar la foto del frente de tu INE.';
     return;
   }
-  if (!ineReversoBase64) {
+  if (!ineReversoFile) {
     ineErrorEl.textContent = 'Debes capturar la foto del reverso de tu INE.';
     return;
   }
@@ -585,26 +588,25 @@ form.addEventListener('submit', async (event) => {
 
     const imcInfo = getImcInfo(roundedImc);
 
-    const payload = {
-      nombre: fullName,
-      edad: age,
-      ine_frente: ineFrenteBase64,
-      ine_reverso: ineReversoBase64,
-      estatura_cm: heightCm,
-      peso_kg: weightKg,
-      procedimiento: procedure,
-      imc: roundedImc,
-      clasificacion_imc: classification,
-      apta_para_cirugia: imcInfo.suitable,
-      confirmo_lectura_imc: confirmImcReadingEl.checked,
-      fecha_nacimiento: selectedDob ? selectedDob.toISOString().split('T')[0] : '',
-      token: parseUrlToken(),
-      timestamp: new Date().toISOString()
-    };
+    const formData = new FormData();
+    formData.append('nombre', fullName);
+    formData.append('edad', age);
+    formData.append('ine_frente', ineFrenteFile, 'ine_frente.jpg');
+    formData.append('ine_reverso', ineReversoFile, 'ine_reverso.jpg');
+    formData.append('estatura_cm', heightCm);
+    formData.append('peso_kg', weightKg);
+    formData.append('procedimiento', procedure);
+    formData.append('imc', roundedImc);
+    formData.append('clasificacion_imc', classification);
+    formData.append('apta_para_cirugia', imcInfo.suitable);
+    formData.append('confirmo_lectura_imc', confirmImcReadingEl.checked);
+    formData.append('fecha_nacimiento', selectedDob ? selectedDob.toISOString().split('T')[0] : '');
+    formData.append('token', parseUrlToken());
+    formData.append('timestamp', new Date().toISOString());
 
     showLoader();
     submitBtn.disabled = true;
-    await sendPayload(payload);
+    await sendPayload(formData);
     hideLoader();
 
     form.style.pointerEvents = 'none';

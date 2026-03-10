@@ -20,7 +20,14 @@ export function compressImage(file) {
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, width, height);
 
-        resolve(canvas.toDataURL('image/jpeg', IMAGE_QUALITY));
+        canvas.toBlob(
+          (blob) => {
+            if (blob) resolve(blob);
+            else reject(new Error('Error al comprimir la imagen.'));
+          },
+          'image/jpeg',
+          IMAGE_QUALITY
+        );
       };
       img.onerror = () => reject(new Error('Error al procesar la imagen.'));
       img.src = e.target.result;
