@@ -396,6 +396,8 @@ dobContinueBtn.addEventListener('click', () => {
     dobErrorEl.textContent = 'De acuerdo a tu fecha de nacimiento, no cumples con la edad mínima requerida (18 años).';
     return;
   }
+  ageEl.value = age;
+  updateStep1Icons();
   hideModal(dobModal);
   showModal(initialModal);
 });
