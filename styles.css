@@ -528,6 +528,97 @@ select {
   color: var(--color-error);
 }
 
+.modal__btn-pair {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.modal__btn-pair .btn {
+  flex: 1;
+}
+
+.calendar {
+  margin-bottom: 0.5rem;
+}
+
+.calendar__header {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+}
+
+.calendar__select {
+  width: auto;
+  padding: 0.5rem 2rem 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.calendar__weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--color-muted);
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.calendar__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.calendar__day {
+  display: grid;
+  place-items: center;
+  height: 34px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: var(--color-text);
+  font-family: inherit;
+  transition: all 0.15s ease;
+  padding: 0;
+}
+
+.calendar__day:hover:not(.calendar__day--disabled):not(.calendar__day--empty) {
+  background: var(--color-bg);
+}
+
+.calendar__day--selected {
+  background: var(--color-primary) !important;
+  color: #fff !important;
+  font-weight: 700;
+}
+
+.calendar__day--empty {
+  pointer-events: none;
+}
+
+.calendar__day--disabled {
+  opacity: 0.25;
+  pointer-events: none;
+  cursor: default;
+}
+
+.calendar__selected-display {
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--color-primary);
+  min-height: 1.4rem;
+  margin: 0.25rem 0 0.5rem;
+}
+
 .spinner {
   width: 40px;
   height: 40px;

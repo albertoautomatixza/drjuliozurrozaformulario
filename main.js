@@ -42,6 +42,21 @@ const imcModalErrorEl = document.getElementById('imcModalError');
 const loaderOverlay = document.getElementById('loaderOverlay');
 const loadingBarFill = document.getElementById('loadingBarFill');
 
+const ageCheckModal = document.getElementById('ageCheckModal');
+const ageCheckYesBtn = document.getElementById('ageCheckYesBtn');
+const ageCheckNoBtn = document.getElementById('ageCheckNoBtn');
+const ageCheckErrorEl = document.getElementById('ageCheckError');
+const dobModal = document.getElementById('dobModal');
+const dobContinueBtn = document.getElementById('dobContinueBtn');
+const dobErrorEl = document.getElementById('dobError');
+const calendarWidget = document.getElementById('calendarWidget');
+const selectedDateDisplay = document.getElementById('selectedDateDisplay');
+
+const MONTHS_ES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+let calYear = new Date().getFullYear() - 25;
+let calMonth = 0;
+let selectedDob = null;
+
 const icon1_1 = document.getElementById('icon1-1');
 const icon1_2 = document.getElementById('icon1-2');
 const icon1_3 = document.getElementById('icon1-3');
@@ -199,6 +214,84 @@ function getImcInfo(imc) {
   }
 }
 
+function renderCalendar() {
+  const monthOptions = MONTHS_ES.map((m, i) =>
+    `<option value="${i}"${i === calMonth ? ' selected' : ''}>${m}</option>`
+  ).join('');
+
+  const currentYear = new Date().getFullYear();
+  let yearOptions = '';
+  for (let y = currentYear; y >= currentYear - 100; y--) {
+    yearOptions += `<option value="${y}"${y === calYear ? ' selected' : ''}>${y}</option>`;
+  }
+
+  const firstDay = new Date(calYear, calMonth, 1);
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  let startDay = firstDay.getDay();
+  startDay = startDay === 0 ? 6 : startDay - 1;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  let daysHtml = '';
+  for (let i = 0; i < startDay; i++) {
+    daysHtml += '<span class="calendar__day calendar__day--empty"></span>';
+  }
+  for (let d = 1; d <= daysInMonth; d++) {
+    const thisDate = new Date(calYear, calMonth, d);
+    const isDisabled = thisDate > today;
+    const isSelected = selectedDob &&
+      selectedDob.getFullYear() === calYear &&
+      selectedDob.getMonth() === calMonth &&
+      selectedDob.getDate() === d;
+    const classes = ['calendar__day'];
+    if (isDisabled) classes.push('calendar__day--disabled');
+    if (isSelected) classes.push('calendar__day--selected');
+    daysHtml += `<button type="button" class="${classes.join(' ')}" data-day="${d}"${isDisabled ? ' disabled' : ''}>${d}</button>`;
+  }
+
+  calendarWidget.innerHTML = `
+    <div class="calendar__header">
+      <select class="calendar__select" id="calMonthSelect">${monthOptions}</select>
+      <select class="calendar__select" id="calYearSelect">${yearOptions}</select>
+    </div>
+    <div class="calendar__weekdays">
+      <span>Lu</span><span>Ma</span><span>Mi</span><span>Ju</span><span>Vi</span><span>Sa</span><span>Do</span>
+    </div>
+    <div class="calendar__grid">${daysHtml}</div>
+  `;
+
+  document.getElementById('calMonthSelect').addEventListener('change', (e) => {
+    calMonth = parseInt(e.target.value);
+    renderCalendar();
+  });
+  document.getElementById('calYearSelect').addEventListener('change', (e) => {
+    calYear = parseInt(e.target.value);
+    renderCalendar();
+  });
+
+  calendarWidget.querySelectorAll('.calendar__day:not(.calendar__day--empty):not(.calendar__day--disabled)').forEach(btn => {
+    btn.addEventListener('click', () => {
+      selectedDob = new Date(calYear, calMonth, parseInt(btn.dataset.day));
+      renderCalendar();
+      const day = selectedDob.getDate();
+      const month = MONTHS_ES[selectedDob.getMonth()];
+      const year = selectedDob.getFullYear();
+      selectedDateDisplay.textContent = `${day} de ${month} de ${year}`;
+    });
+  });
+}
+
+function calculateAgeFromDob(dob) {
+  const today = new Date();
+  let age = today.getFullYear() - dob.getFullYear();
+  const m = today.getMonth() - dob.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+    age--;
+  }
+  return age;
+}
+
 function validateInitialQuestionnaire() {
   const fullName = fullNameEl.value.trim();
   const age = Number(ageEl.value);
@@ -280,6 +373,32 @@ async function sendPayload(payload) {
 }
 
 openInitialModalBtn.addEventListener('click', () => showModal(initialModal));
+
+ageCheckYesBtn.addEventListener('click', () => {
+  ageCheckErrorEl.textContent = '';
+  hideModal(ageCheckModal);
+  renderCalendar();
+  showModal(dobModal);
+});
+
+ageCheckNoBtn.addEventListener('click', () => {
+  ageCheckErrorEl.textContent = 'Este servicio es exclusivamente para personas mayores de edad (18 años o más).';
+});
+
+dobContinueBtn.addEventListener('click', () => {
+  dobErrorEl.textContent = '';
+  if (!selectedDob) {
+    dobErrorEl.textContent = 'Selecciona tu fecha de nacimiento.';
+    return;
+  }
+  const age = calculateAgeFromDob(selectedDob);
+  if (age < CONFIG.minAge) {
+    dobErrorEl.textContent = 'De acuerdo a tu fecha de nacimiento, no cumples con la edad mínima requerida (18 años).';
+    return;
+  }
+  hideModal(dobModal);
+  showModal(initialModal);
+});
 
 fullNameEl.addEventListener('input', updateStep1Icons);
 ageEl.addEventListener('input', updateStep1Icons);
@@ -383,6 +502,7 @@ form.addEventListener('submit', async (event) => {
       clasificacion_imc: classification,
       apta_para_cirugia: imcInfo.suitable,
       confirmo_lectura_imc: confirmImcReadingEl.checked,
+      fecha_nacimiento: selectedDob ? selectedDob.toISOString().split('T')[0] : '',
       token: parseUrlToken(),
       timestamp: new Date().toISOString()
     };

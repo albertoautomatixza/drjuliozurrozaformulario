@@ -117,7 +117,34 @@
     </div>
   </div>
 
-  <div id="initialModal" class="modal is-visible" aria-hidden="false" role="dialog" aria-modal="true" aria-labelledby="initialModalTitle">
+  <div id="ageCheckModal" class="modal is-visible" aria-hidden="false" role="dialog" aria-modal="true" aria-labelledby="ageCheckModalTitle">
+    <div class="modal__content">
+      <h3 id="ageCheckModalTitle">Verificacion de edad</h3>
+      <div class="field">
+        <label>¿Eres mayor de edad?</label>
+      </div>
+      <div class="modal__btn-pair">
+        <button type="button" id="ageCheckYesBtn" class="btn btn--primary">SI</button>
+        <button type="button" id="ageCheckNoBtn" class="btn btn--ghost">NO</button>
+      </div>
+      <p id="ageCheckError" class="inline-error" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <div id="dobModal" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="dobModalTitle">
+    <div class="modal__content">
+      <h3 id="dobModalTitle">Fecha de nacimiento</h3>
+      <div class="field">
+        <label>Selecciona tu fecha de nacimiento</label>
+      </div>
+      <div id="calendarWidget" class="calendar"></div>
+      <p id="selectedDateDisplay" class="calendar__selected-display"></p>
+      <p id="dobError" class="inline-error" aria-live="polite"></p>
+      <button type="button" id="dobContinueBtn" class="btn btn--primary">CONTINUAR</button>
+    </div>
+  </div>
+
+  <div id="initialModal" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="initialModalTitle">
     <div class="modal__content">
       <h3 id="initialModalTitle">Paso 1 · Cuestionario</h3>
       <div class="field">
