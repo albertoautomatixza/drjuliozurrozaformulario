@@ -404,6 +404,9 @@ ageCheckYesBtn.addEventListener('click', () => {
 
 ageCheckNoBtn.addEventListener('click', () => {
   ageCheckErrorEl.textContent = 'Este servicio es exclusivamente para personas mayores de edad (18 años o más).';
+  ageCheckYesBtn.disabled = true;
+  ageCheckYesBtn.style.opacity = '0.4';
+  ageCheckYesBtn.style.pointerEvents = 'none';
 });
 
 dobContinueBtn.addEventListener('click', () => {
