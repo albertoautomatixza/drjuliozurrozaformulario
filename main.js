@@ -1,3 +1,5 @@
+import { compressImage } from './image-utils.js';
+
 const CONFIG = {
   webhookUrl: 'https://hook.eu2.make.com/snkxjnttf3bbr0bw476f41bk7w7dxvlr',
   minAge: 18,
@@ -57,6 +59,23 @@ let calYear = new Date().getFullYear() - 25;
 let calMonth = 0;
 let selectedDob = null;
 
+let ineFrenteBase64 = null;
+let ineReversoBase64 = null;
+const ineFrenteInput = document.getElementById('ineFrenteInput');
+const ineReversoInput = document.getElementById('ineReversoInput');
+const ineFrenteBtn = document.getElementById('ineFrenteBtn');
+const ineReversoBtn = document.getElementById('ineReversoBtn');
+const ineFrenteImg = document.getElementById('ineFrenteImg');
+const ineReversoImg = document.getElementById('ineReversoImg');
+const ineFrentePlaceholder = document.getElementById('ineFrentePlaceholder');
+const ineReversoPlaceholder = document.getElementById('ineReversoPlaceholder');
+const ineErrorEl = document.getElementById('ineError');
+const backFromIneBtn = document.getElementById('backFromIneBtn');
+const continueFromIneBtn = document.getElementById('continueFromIneBtn');
+const iconIne1 = document.getElementById('iconIne1');
+const iconIne2 = document.getElementById('iconIne2');
+const iconIne3 = document.getElementById('iconIne3');
+
 const icon1_1 = document.getElementById('icon1-1');
 const icon1_2 = document.getElementById('icon1-2');
 const icon1_3 = document.getElementById('icon1-3');
@@ -78,7 +97,7 @@ function setStep(stepNumber) {
     dot.classList.toggle('is-done', dotStep < stepNumber);
   });
 
-  const totalSteps = 3;
+  const totalSteps = 4;
   const progressPercentage = (stepNumber / totalSteps) * 100;
   loadingBarFill.style.width = `${progressPercentage}%`;
 }
@@ -344,6 +363,8 @@ function fillSummary() {
   summaryListEl.innerHTML = `
     <li><strong>Nombre completo:</strong> ${fullName}</li>
     <li><strong>Edad:</strong> ${age} años</li>
+    <li><strong>INE Frente:</strong> ${ineFrenteBase64 ? 'Adjunta' : 'No adjunta'}</li>
+    <li><strong>INE Reverso:</strong> ${ineReversoBase64 ? 'Adjunta' : 'No adjunta'}</li>
     <li><strong>Peso:</strong> ${weightKg} kg</li>
     <li><strong>Estatura:</strong> ${heightCm} cm</li>
     <li><strong>Procedimiento deseado:</strong> ${procedure}</li>
@@ -402,6 +423,73 @@ dobContinueBtn.addEventListener('click', () => {
   showModal(initialModal);
 });
 
+function updateIneCheckIcon() {
+  if (ineFrenteBase64 && ineReversoBase64) {
+    iconIne3.classList.add('is-filled');
+  } else {
+    iconIne3.classList.remove('is-filled');
+  }
+}
+
+ineFrenteBtn.addEventListener('click', () => {
+  ineFrenteInput.value = '';
+  ineFrenteInput.click();
+});
+
+ineReversoBtn.addEventListener('click', () => {
+  ineReversoInput.value = '';
+  ineReversoInput.click();
+});
+
+ineFrenteInput.addEventListener('change', async () => {
+  const file = ineFrenteInput.files[0];
+  if (!file) return;
+  ineErrorEl.textContent = '';
+  try {
+    ineFrenteBase64 = await compressImage(file);
+    ineFrenteImg.src = ineFrenteBase64;
+    ineFrenteImg.style.display = 'block';
+    ineFrentePlaceholder.style.display = 'none';
+    ineFrenteBtn.textContent = 'Volver a tomar';
+    iconIne1.classList.add('is-filled');
+    updateIneCheckIcon();
+  } catch (err) {
+    ineErrorEl.textContent = err.message;
+  }
+});
+
+ineReversoInput.addEventListener('change', async () => {
+  const file = ineReversoInput.files[0];
+  if (!file) return;
+  ineErrorEl.textContent = '';
+  try {
+    ineReversoBase64 = await compressImage(file);
+    ineReversoImg.src = ineReversoBase64;
+    ineReversoImg.style.display = 'block';
+    ineReversoPlaceholder.style.display = 'none';
+    ineReversoBtn.textContent = 'Volver a tomar';
+    iconIne2.classList.add('is-filled');
+    updateIneCheckIcon();
+  } catch (err) {
+    ineErrorEl.textContent = err.message;
+  }
+});
+
+backFromIneBtn.addEventListener('click', () => setStep(1));
+
+continueFromIneBtn.addEventListener('click', () => {
+  ineErrorEl.textContent = '';
+  if (!ineFrenteBase64) {
+    ineErrorEl.textContent = 'Debes capturar la foto del frente de tu INE.';
+    return;
+  }
+  if (!ineReversoBase64) {
+    ineErrorEl.textContent = 'Debes capturar la foto del reverso de tu INE.';
+    return;
+  }
+  setStep(3);
+});
+
 fullNameEl.addEventListener('input', updateStep1Icons);
 ageEl.addEventListener('input', updateStep1Icons);
 
@@ -450,8 +538,8 @@ toSummaryBtn.addEventListener('click', () => {
   }
 });
 
-backToStep1Btn.addEventListener('click', () => setStep(1));
-backToStep2Btn.addEventListener('click', () => setStep(2));
+backToStep1Btn.addEventListener('click', () => setStep(2));
+backToStep2Btn.addEventListener('click', () => setStep(3));
 
 closeModalBtn.addEventListener('click', () => hideModal(ageModal));
 ageModal.addEventListener('click', (event) => {
@@ -476,7 +564,7 @@ continueFromImcBtn.addEventListener('click', () => {
     icon3_1.classList.add('is-filled');
     icon3_2.classList.add('is-filled');
     icon3_3.classList.add('is-filled');
-    setStep(3);
+    setStep(4);
   } catch (error) {
     imcModalErrorEl.textContent = error.message;
   }
@@ -497,6 +585,8 @@ form.addEventListener('submit', async (event) => {
     const payload = {
       nombre: fullName,
       edad: age,
+      ine_frente: ineFrenteBase64,
+      ine_reverso: ineReversoBase64,
       estatura_cm: heightCm,
       peso_kg: weightKg,
       procedimiento: procedure,

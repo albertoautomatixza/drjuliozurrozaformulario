@@ -39,6 +39,8 @@
           <span class="progress__step" data-step="2">2</span>
           <span class="progress__line"></span>
           <span class="progress__step" data-step="3">3</span>
+          <span class="progress__line"></span>
+          <span class="progress__step" data-step="4">4</span>
         </div>
 
         <form id="patientForm" novalidate>
@@ -50,7 +52,40 @@
             <button type="button" id="openInitialModalBtn" class="btn btn--primary">Abrir cuestionario</button>
           </section>
 
-          <section class="step" data-step="2" aria-label="Datos corporales y procedimiento">
+          <section class="step" data-step="2" aria-label="Captura de identificacion">
+            <h2>Captura tu identificación oficial</h2>
+            <div class="step-icons" aria-hidden="true"><span class="step-icon" id="iconIne1">📷</span><span class="step-icon" id="iconIne2">📷</span><span class="step-icon" id="iconIne3">✅</span></div>
+            <p>Toma una fotografía del frente y reverso de tu INE. Asegúrate de que la imagen sea legible y completa.</p>
+
+            <div class="ine-block">
+              <span class="ine-block__title">INE Frente</span>
+              <div class="ine-block__preview">
+                <img id="ineFrenteImg" alt="Vista previa INE Frente" />
+                <span class="ine-block__placeholder" id="ineFrentePlaceholder">Sin imagen capturada</span>
+              </div>
+              <input type="file" id="ineFrenteInput" accept="image/*" capture="environment" />
+              <button type="button" class="btn btn--primary" id="ineFrenteBtn">Tomar foto del frente</button>
+            </div>
+
+            <div class="ine-block">
+              <span class="ine-block__title">INE Reverso</span>
+              <div class="ine-block__preview">
+                <img id="ineReversoImg" alt="Vista previa INE Reverso" />
+                <span class="ine-block__placeholder" id="ineReversoPlaceholder">Sin imagen capturada</span>
+              </div>
+              <input type="file" id="ineReversoInput" accept="image/*" capture="environment" />
+              <button type="button" class="btn btn--primary" id="ineReversoBtn">Tomar foto del reverso</button>
+            </div>
+
+            <p id="ineError" class="inline-error" aria-live="polite"></p>
+
+            <div class="actions">
+              <button type="button" id="backFromIneBtn" class="btn btn--ghost">Volver</button>
+              <button type="button" id="continueFromIneBtn" class="btn btn--primary">Continuar</button>
+            </div>
+          </section>
+
+          <section class="step" data-step="3" aria-label="Datos corporales y procedimiento">
             <h2>Datos para valoración</h2>
             <div class="step-icons" aria-hidden="true"><span class="step-icon" id="icon2-1">⚖️</span><span class="step-icon" id="icon2-2">📏</span><span class="step-icon" id="icon2-3">🩺</span></div>
 
@@ -91,7 +126,7 @@
             </div>
           </section>
 
-          <section class="step" data-step="3" aria-live="polite" aria-label="Resumen y confirmación">
+          <section class="step" data-step="4" aria-live="polite" aria-label="Resumen y confirmación">
             <h2>Resumen de información</h2>
             <div class="step-icons" aria-hidden="true"><span class="step-icon" id="icon3-1">🧾</span><span class="step-icon" id="icon3-2">💗</span><span class="step-icon" id="icon3-3">📤</span></div>
             <ul id="summaryList" class="summary-list"></ul>
