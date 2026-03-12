@@ -528,6 +528,40 @@ select {
   color: var(--color-error);
 }
 
+.policy-text {
+  text-align: left;
+  line-height: 1.7;
+  font-size: 0.9rem;
+  color: var(--color-text);
+  margin-bottom: 1.5rem;
+}
+
+.policy-text h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 1.25rem 0 0.5rem;
+  color: var(--color-text);
+}
+
+.policy-text p {
+  margin: 0.5rem 0;
+}
+
+.policy-text ul {
+  padding-left: 1.25rem;
+  margin: 0.5rem 0;
+}
+
+.policy-text ul li {
+  margin-bottom: 0.4rem;
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 .modal__btn-pair {
   display: flex;
   gap: 0.75rem;

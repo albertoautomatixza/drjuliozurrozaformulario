@@ -1,4 +1,5 @@
 import { compressImage } from './image-utils.js';
+import { policyServiceHTML, privacyPolicyHTML } from './policy-content.js';
 
 const CONFIG = {
   webhookUrl: 'https://hook.eu2.make.com/snkxjnttf3bbr0bw476f41bk7w7dxvlr',
@@ -43,6 +44,15 @@ const imcModalContentEl = document.getElementById('imcModalContent');
 const imcModalErrorEl = document.getElementById('imcModalError');
 const loaderOverlay = document.getElementById('loaderOverlay');
 const loadingBarFill = document.getElementById('loadingBarFill');
+
+const policyServiceModal = document.getElementById('policyServiceModal');
+const policyServiceScroll = document.getElementById('policyServiceScroll');
+const policyServiceText = document.getElementById('policyServiceText');
+const policyServiceAcceptBtn = document.getElementById('policyServiceAcceptBtn');
+const privacyPolicyModal = document.getElementById('privacyPolicyModal');
+const privacyPolicyScroll = document.getElementById('privacyPolicyScroll');
+const privacyPolicyText = document.getElementById('privacyPolicyText');
+const privacyPolicyAcceptBtn = document.getElementById('privacyPolicyAcceptBtn');
 
 const ageCheckModal = document.getElementById('ageCheckModal');
 const ageCheckYesBtn = document.getElementById('ageCheckYesBtn');
@@ -520,6 +530,37 @@ continueFromInitialBtn.addEventListener('click', () => {
   }
 });
 
+policyServiceText.innerHTML = policyServiceHTML;
+privacyPolicyText.innerHTML = privacyPolicyHTML;
+
+function checkScrolledToBottom(scrollEl) {
+  return scrollEl.scrollHeight - scrollEl.scrollTop <= scrollEl.clientHeight + 30;
+}
+
+policyServiceScroll.addEventListener('scroll', () => {
+  if (checkScrolledToBottom(policyServiceScroll)) {
+    policyServiceAcceptBtn.disabled = false;
+  }
+});
+
+privacyPolicyScroll.addEventListener('scroll', () => {
+  if (checkScrolledToBottom(privacyPolicyScroll)) {
+    privacyPolicyAcceptBtn.disabled = false;
+  }
+});
+
+policyServiceAcceptBtn.addEventListener('click', () => {
+  hideModal(policyServiceModal);
+  privacyPolicyScroll.scrollTop = 0;
+  privacyPolicyAcceptBtn.disabled = true;
+  showModal(privacyPolicyModal);
+});
+
+privacyPolicyAcceptBtn.addEventListener('click', () => {
+  hideModal(privacyPolicyModal);
+  showModal(imcModal);
+});
+
 toSummaryBtn.addEventListener('click', () => {
   step2ErrorEl.textContent = '';
   summaryErrorEl.textContent = '';
@@ -538,7 +579,9 @@ toSummaryBtn.addEventListener('click', () => {
     imcModalContentEl.innerHTML = imcInfo.content;
 
     updateStep2Icons();
-    showModal(imcModal);
+    policyServiceScroll.scrollTop = 0;
+    policyServiceAcceptBtn.disabled = true;
+    showModal(policyServiceModal);
   } catch (error) {
     step2ErrorEl.textContent = error.message;
   }
