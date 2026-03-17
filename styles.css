@@ -529,7 +529,7 @@ select {
 }
 
 .policy-text {
-  text-align: left;
+  text-align: justify;
   line-height: 1.7;
   font-size: 0.9rem;
   color: var(--color-text);
