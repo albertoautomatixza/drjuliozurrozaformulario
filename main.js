@@ -2,7 +2,7 @@ import { compressImage } from './image-utils.js';
 import { policyServiceHTML, privacyPolicyHTML } from './policy-content.js';
 
 const CONFIG = {
-  webhookUrl: 'https://hook.eu2.make.com/snkxjnttf3bbr0bw476f41bk7w7dxvlr',
+  webhookUrl: 'https://expediente.159-54-158-237.sslip.io/webhook/exp-prereg?token_ingesta=3337a1ef07ac7a3fc38c130b594681c0c073',
   minAge: 18,
   heightRange: { min: 120, max: 220 },
   weightRange: { min: 30, max: 250 }
